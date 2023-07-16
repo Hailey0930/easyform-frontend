@@ -73,15 +73,7 @@ export default function Profile() {
             <S.DetailIconContainer>
               <S.AccountEmail>{userInfo?.email}</S.AccountEmail>
               <S.SocialIconWrapper>
-                {userInfo?.regSocialPlatform === "google" && (
-                  <S.SocialIcon src="/assets/profile/icon_google.png" />
-                )}
-                {userInfo?.regSocialPlatform === "naver" && (
-                  <S.SocialIcon src="/assets/profile/icon_naver.png" />
-                )}
-                {userInfo?.regSocialPlatform === "kakao" && (
-                  <S.SocialIcon src="/assets/profile/icon_kakao.png" />
-                )}
+       <S.SocialIcon src='/assets/profile/icon_${userInfo?.regSocialPlatform}.png` />
               </S.SocialIconWrapper>
             </S.DetailIconContainer>
             <S.DetailIconContainer>
