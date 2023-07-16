@@ -73,7 +73,9 @@ export default function Profile() {
             <S.DetailIconContainer>
               <S.AccountEmail>{userInfo?.email}</S.AccountEmail>
               <S.SocialIconWrapper>
-       <S.SocialIcon src='/assets/profile/icon_${userInfo?.regSocialPlatform}.png` />
+                <S.SocialIcon
+                  src={`/assets/profile/icon_${userInfo?.regSocialPlatform}.png`}
+                />
               </S.SocialIconWrapper>
             </S.DetailIconContainer>
             <S.DetailIconContainer>
