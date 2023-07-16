@@ -90,6 +90,12 @@ export const SocialIcon = styled.img`
   height: 100%;
 `;
 
+export const NickNameWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const NickName = styled.div`
   font-weight: 400;
   font-size: ${fontSize.deskTopFont.title};
@@ -99,8 +105,8 @@ export const NickName = styled.div`
 `;
 
 export const NickNameInput = styled.input`
-  min-width: 110px;
-  margin-right: 11px;
+  min-width: 192px;
+  margin-right: 8px;
   width: fit-content;
   height: 10px;
   padding: 8px;
@@ -117,6 +123,32 @@ export const NickNameInput = styled.input`
 
   ::-webkit-input-placeholder {
     color: ${colors.black[300]};
+  }
+`;
+
+export const NickNameEditButton = styled.button`
+  width: 32px;
+  height: 32px;
+  margin-right: 4px;
+  background-image: url("/assets/profile/icon_check.png");
+  border: transparent;
+  cursor: pointer;
+
+  :hover {
+    background-image: url("/assets/profile/icon_hover_check.png");
+  }
+`;
+
+export const NickNameCancelButton = styled.button`
+  width: 32px;
+  height: 32px;
+  margin-right: 4px;
+  background-image: url("/assets/profile/icon_cancel.png");
+  border: transparent;
+  cursor: pointer;
+
+  :hover {
+    background-image: url("/assets/profile/icon_hover_cancel.png");
   }
 `;
 

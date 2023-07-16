@@ -17,11 +17,25 @@ export default function Profile() {
   const router = useRouter();
 
   useEffect(() => {
+    if (!useCookie.getCookie("access-token")) {
+      router.replace("/");
+    }
+  }, []);
+
+  useEffect(() => {
     modalClose(isModalDisplay, setIsModalDisplay, outSide);
-  });
+  }, []);
 
   const onClickEditNickName = () => {
-    setIsEditNickName(!isEditNickName);
+    setIsEditNickName(true);
+  };
+
+  const onClickEditDone = () => {
+    setIsEditNickName(false);
+  };
+
+  const onClickEditCancel = () => {
+    setIsEditNickName(false);
   };
 
   const onChangeLanguage = (e: ChangeEvent<HTMLInputElement>) => {
@@ -55,13 +69,19 @@ export default function Profile() {
             </S.DetailIconContainer>
             <S.DetailIconContainer>
               {isEditNickName ? (
-                <S.NickNameInput></S.NickNameInput>
+                <S.NickNameWrapper>
+                  <S.NickNameInput />
+                  <S.NickNameEditButton onClick={onClickEditDone} />
+                  <S.NickNameCancelButton onClick={onClickEditCancel} />
+                </S.NickNameWrapper>
               ) : (
-                <S.NickName>in5b7d0t</S.NickName>
+                <S.NickNameWrapper>
+                  <S.NickName>in5b7d0t</S.NickName>
+                  <S.EditIconWrapper onClick={onClickEditNickName}>
+                    <S.EditIcon src="/assets/profile/icon_edit.png" />
+                  </S.EditIconWrapper>
+                </S.NickNameWrapper>
               )}
-              <S.EditIconWrapper onClick={onClickEditNickName}>
-                <S.EditIcon src="/assets/profile/icon_edit.png" />
-              </S.EditIconWrapper>
             </S.DetailIconContainer>
           </S.AccountDetailContainer>
         </S.AccountContainer>
