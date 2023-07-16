@@ -135,11 +135,13 @@ export default function ShareModal({ setIsShareModalOpen }: IShareModalProps) {
         isToastOpen={isResponseToastOpen}
         setIsToastOpen={setIsResponseToastOpen}
         contents="응답 링크가 복사되었습니다."
+        toastMode="normal"
       />
       <ToastPopUp
         isToastOpen={isAdministratorToastOpen}
         setIsToastOpen={setIsAdministratorToastOpen}
         contents="관리자 링크가 복사되었습니다."
+        toastMode="normal"
       />
     </>
   );

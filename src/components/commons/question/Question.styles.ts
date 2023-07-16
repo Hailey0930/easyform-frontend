@@ -27,6 +27,7 @@ export const QuestionTopWrapper = styled.div`
   align-items: center;
 
   width: 100%;
+  height: 61px;
   margin-bottom: 32px;
 `;
 
@@ -68,7 +69,6 @@ export const QuestionTitleInput = styled.input`
 
 export const QuestionTitle = styled.div`
   width: 87%;
-  height: 15px;
   font-weight: 400;
   font-size: ${fontSize.deskTopFont.MainTitle};
   line-height: 29px;
@@ -242,22 +242,18 @@ export const AddOptionButton = styled.div`
   cursor: pointer;
 `;
 
-export const ParagraphWrapper = styled.div<{ isEditParagraph: boolean }>`
+export const ParagraphWrapper = styled.div<{ isEditMode: boolean }>`
   width: 100%;
   background-color: ${colors.black[900]};
   border-radius: 4px;
   border: ${(props) =>
-    props.isEditParagraph ? `1px solid ${colors.blue[100]}` : "none"};
+    props.isEditMode ? `1px solid ${colors.blue[100]}` : "none"};
 
   padding: 16px 24px;
   font-weight: 400;
   font-size: 1.6rem;
   line-height: 21px;
   color: ${colors.black[500]};
-
-  :hover {
-    border: 1px solid ${colors.blue[100]};
-  }
 `;
 
 export const ParagraphInput = styled.input`
@@ -279,23 +275,66 @@ export const ParagraphInput = styled.input`
   }
 `;
 
-export const QuestionBottomWrapper = styled.div<{ questionType: string }>`
+export const QuestionBottomWrapper = styled.div<{
+  questionType: string;
+  isEditMode: boolean;
+}>`
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  width: ${(props) =>
-    props.questionType === "Multiple Choice" ? "320px" : "190px"};
+  width: ${(props) => (props.isEditMode ? "100%" : "254px")};
   height: 24px;
   margin-top: 32px;
 `;
 
-export const TextButton = styled.div`
-  font-weight: 400;
+export const IconButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 70px;
+  height: 19px;
+  border: transparent;
+  background-color: transparent;
   font-size: 1.6rem;
-  line-height: 24px;
+  font-weight: 400;
+  line-height: 19px;
   color: ${colors.black[200]};
   cursor: pointer;
+`;
+
+export const SaveIconButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 70px;
+  height: 19px;
+  border: transparent;
+  background-color: transparent;
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 19px;
+  color: ${colors.blue[100]};
+  cursor: pointer;
+`;
+
+export const ButtonIconWrapper = styled.div`
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+`;
+
+export const ButtonIcon = styled.img`
+  width: 100%;
+  height: 100%;
+`;
+
+export const CancelIconWrapper = styled.div`
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
 `;
 
 export const BoundaryLine = styled.div`
@@ -309,4 +348,20 @@ export const ToggleTitle = styled.div`
   font-size: 1.6rem;
   line-height: 19px;
   color: ${colors.black[200]};
+`;
+
+export const EditModeToggleWrapper = styled.div<{ questionType: string }>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: ${(props) =>
+    props.questionType === "Multiple Choice" ? "214px" : "85px"};
+`;
+
+export const EditModeButtonWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 344px;
 `;
