@@ -5,9 +5,11 @@ import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
 import { loginState } from "store/loginState";
 import modalClose from "commons/utils/modalClose";
+import { getUserInfo } from "commons/api/getUserInfo";
 
 export default function Profile() {
   const [isEditNickName, setIsEditNickName] = useState(false);
+  const [nickName, setNickName] = useState("");
   const [language, setLanguage] = useState("korean");
   const [isModalDisplay, setIsModalDisplay] = useState(false);
   const [, setIsLogin] = useRecoilState(loginState);
@@ -15,6 +17,8 @@ export default function Profile() {
   const outSide = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
+
+  const { data: userInfo } = getUserInfo();
 
   useEffect(() => {
     if (!useCookie.getCookie("access-token")) {
@@ -36,6 +40,11 @@ export default function Profile() {
 
   const onClickEditCancel = () => {
     setIsEditNickName(false);
+    setNickName("");
+  };
+
+  const onChangeNickName = (event: ChangeEvent<HTMLInputElement>) => {
+    setNickName(event.target.value);
   };
 
   const onChangeLanguage = (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,25 +67,36 @@ export default function Profile() {
         <S.Title>Account</S.Title>
         <S.AccountContainer>
           <S.AccountImageContainer>
-            <S.AccountImage />
+            {/* <S.AccountImage /> */}
           </S.AccountImageContainer>
           <S.AccountDetailContainer>
             <S.DetailIconContainer>
-              <S.AccountEmail>abcdefg@gmail.com</S.AccountEmail>
+              <S.AccountEmail>{userInfo?.email}</S.AccountEmail>
               <S.SocialIconWrapper>
-                <S.SocialIcon src="/assets/profile/icon_kakao.png" />
+                {userInfo?.regSocialPlatform === "google" && (
+                  <S.SocialIcon src="/assets/profile/icon_google.png" />
+                )}
+                {userInfo?.regSocialPlatform === "naver" && (
+                  <S.SocialIcon src="/assets/profile/icon_naver.png" />
+                )}
+                {userInfo?.regSocialPlatform === "kakao" && (
+                  <S.SocialIcon src="/assets/profile/icon_kakao.png" />
+                )}
               </S.SocialIconWrapper>
             </S.DetailIconContainer>
             <S.DetailIconContainer>
               {isEditNickName ? (
                 <S.NickNameWrapper>
-                  <S.NickNameInput />
+                  <S.NickNameInput
+                    onChange={onChangeNickName}
+                    defaultValue={userInfo?.nickname}
+                  />
                   <S.NickNameEditButton onClick={onClickEditDone} />
                   <S.NickNameCancelButton onClick={onClickEditCancel} />
                 </S.NickNameWrapper>
               ) : (
                 <S.NickNameWrapper>
-                  <S.NickName>in5b7d0t</S.NickName>
+                  <S.NickName>{userInfo?.nickname}</S.NickName>
                   <S.EditIconWrapper onClick={onClickEditNickName}>
                     <S.EditIcon src="/assets/profile/icon_edit.png" />
                   </S.EditIconWrapper>

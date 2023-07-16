@@ -49,6 +49,7 @@ export const AccountContainer = styled.div`
 export const AccountImageContainer = styled.div`
   width: 52px;
   height: 52px;
+  background-color: #aed0ce;
   border: 1px solid ${colors.black[400]};
   border-radius: 50%;
   margin-right: 16px;
