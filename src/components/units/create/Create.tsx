@@ -2,15 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import * as S from "./Create.styles";
 import Question from "components/commons/question/Question";
 import { v4 as uuidv4 } from "uuid";
+import ToastPopUp from "components/commons/ToastPopUP";
 
 export default function Create() {
-  const [isEditTitle, setIsEditTitle] = useState(false);
+  const [isEditTitle, setIsEditTitle] = useState(true);
   const [isEditDescription, setIsEditDescription] = useState(false);
   const [addQuestion, setAddQuestion] = useState([
     {
       id: uuidv4(),
     },
   ]);
+  const [isToastOpen, setIsToastOpen] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [scrollTopDown, setScrollTopDown] = useState("top");
 
@@ -62,6 +64,9 @@ export default function Create() {
       setAddQuestion(
         addQuestion.filter((question: { id: string }) => question.id !== id)
       );
+    else if (addQuestion.length === 1) {
+      setIsToastOpen(true);
+    }
   };
 
   const onClickScrollToTop = () => {
@@ -96,9 +101,9 @@ export default function Create() {
         <S.FormTitle onClick={onClickEditTitle}>Untitled Title</S.FormTitle>
       ) : (
         <S.FormTitleInput
-          onBlur={onBlurEditTitle}
           defaultValue="Untitled Title"
           autoFocus
+          onBlur={onBlurEditTitle}
         />
       )}
       <S.FormDescription
@@ -109,9 +114,9 @@ export default function Create() {
           "Form Description"
         ) : (
           <S.FormDescriptionInput
-            onBlur={onBlurEditDescription}
             defaultValue="Form Description"
             autoFocus
+            onBlur={onBlurEditDescription}
           />
         )}
       </S.FormDescription>
@@ -141,6 +146,12 @@ export default function Create() {
           />
         </S.ScrollButtonWrapper>
       )}
+      <ToastPopUp
+        isToastOpen={isToastOpen}
+        setIsToastOpen={setIsToastOpen}
+        contents="질문이 한 개 이상이여야 합니다."
+        toastMode="warning"
+      />
     </S.Wrapper>
   );
 }

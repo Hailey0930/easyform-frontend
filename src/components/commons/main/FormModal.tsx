@@ -67,6 +67,7 @@ export default function FormModal({
         isToastOpen={isToastOpen}
         setIsToastOpen={setIsToastOpen}
         contents="설문지가 복제되었습니다."
+        toastMode="normal"
       />
     </>
   );

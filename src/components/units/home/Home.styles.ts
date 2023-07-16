@@ -44,7 +44,7 @@ export const ModalCloseButton = styled.button`
   width: 24px;
   height: 23px;
   background-color: ${colors.black[800]};
-  background-image: url("/assets/icon_delete_option.png");
+  background-image: url("/assets/create/icon_delete_option.png");
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 16px;
