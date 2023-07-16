@@ -2,6 +2,7 @@ import axios from "axios";
 
 export const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_LOCAL_API,
+  withCredentials: true,
 });
 
 instance.interceptors.response.use(

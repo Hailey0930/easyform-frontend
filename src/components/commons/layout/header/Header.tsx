@@ -1,3 +1,4 @@
+import { getUserInfo } from "commons/api/getUserInfo";
 import { useCookie } from "commons/utils/cookie";
 import modalClose from "commons/utils/modalClose";
 import * as S from "components/commons/layout/header/Header.styles";
@@ -14,6 +15,8 @@ export default function Header() {
   const outSide = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
+
+  const { data: userInfo } = getUserInfo();
 
   useEffect(() => {
     modalClose(isDisplayProfile, setIsDisplayProfile, outSide);
@@ -89,7 +92,7 @@ export default function Header() {
             <S.ModalIcon>
               <S.ModalIconImage src="/assets/header/icon_modal_email.png" />
             </S.ModalIcon>
-            <S.EmailInfo>abcdefg@gmail.com</S.EmailInfo>
+            <S.EmailInfo>{userInfo?.email}</S.EmailInfo>
           </S.EmailWrapper>
           <S.BorderLine />
           <S.LogoutWrapper onClick={onClickLogOut}>
