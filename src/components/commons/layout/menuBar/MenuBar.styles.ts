@@ -25,12 +25,12 @@ export const LeftContainer = styled.div`
   justify-content: space-between;
   align-items: center;
 
-  width: 148px;
+  width: 180px;
   height: 53px;
 `;
 
 export const CategoryTitle = styled.button`
-  width: 74px;
+  width: 85px;
   height: 100%;
 
   font-weight: 500;
