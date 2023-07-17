@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as S from "./Create.styles";
 import Question from "components/commons/question/Question";
 import { v4 as uuidv4 } from "uuid";
@@ -17,6 +17,7 @@ export default function Create() {
   const [scrollTopDown, setScrollTopDown] = useState("top");
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
   // NOTE add question 버튼 클릭 시 스크롤 아래로 이동하도록 하는 useEffect
   useEffect(() => {
@@ -35,6 +36,15 @@ export default function Create() {
       }
     }
   }, [scrollPosition, scrollTopDown]);
+
+  // NOTE textArea 높이 자동 설정
+  const handleResizeHeight = useCallback(() => {
+    if (textAreaRef.current !== null) {
+      textAreaRef.current.style.height = "21px";
+      textAreaRef.current.style.height =
+        textAreaRef.current?.scrollHeight - 20 + "px";
+    }
+  }, []);
 
   const onClickEditTitle = () => {
     if (!isEditTitle) setIsEditTitle(true);
@@ -98,28 +108,28 @@ export default function Create() {
   return (
     <S.Wrapper>
       {!isEditTitle ? (
-        <S.FormTitle onClick={onClickEditTitle}>Untitled Title</S.FormTitle>
+        <S.FormTitle onClick={onClickEditTitle}>설문지1</S.FormTitle>
       ) : (
         <S.FormTitleInput
-          defaultValue="Untitled Title"
+          defaultValue="설문지1"
           autoFocus
           onBlur={onBlurEditTitle}
         />
       )}
-      <S.FormDescription
-        onClick={onClickEditDescription}
-        isEditDescription={isEditDescription}
-      >
-        {!isEditDescription ? (
-          "Form Description"
-        ) : (
-          <S.FormDescriptionInput
-            defaultValue="Form Description"
-            autoFocus
-            onBlur={onBlurEditDescription}
-          />
-        )}
-      </S.FormDescription>
+      {!isEditDescription ? (
+        <S.FormDescription onClick={onClickEditDescription}>
+          Form Description
+        </S.FormDescription>
+      ) : (
+        <S.FormDescriptionInput
+          ref={textAreaRef}
+          defaultValue="Form Description"
+          autoFocus
+          onBlur={onBlurEditDescription}
+          onChange={handleResizeHeight}
+        />
+      )}
+
       <S.QuestionWrapper>
         {addQuestion.map((el: { id: string }) => (
           <Question

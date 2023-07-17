@@ -61,6 +61,11 @@ time, mark, audio, video {
     font-family: "PretendardRegular";
   }
 
+  input,
+  textArea {
+    font-family: inherit;
+  }
+
   ::-webkit-scrollbar {
     display: none;
   }

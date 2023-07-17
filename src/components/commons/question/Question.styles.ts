@@ -56,6 +56,7 @@ export const QuestionTitleInput = styled.input`
 
   :focus {
     outline: 1px solid ${colors.blue[100]};
+    border: transparent;
   }
 
   ::-webkit-input-placeholder {
@@ -199,7 +200,7 @@ export const RadioTitleInput = styled.input`
   height: 27px;
   padding: 8px;
   margin-right: 37px;
-  border: 1px solid ${colors.blue[100]};
+  border: 1px solid ${colors.black[600]};
   border-radius: 2px;
   font-weight: 400;
   font-size: 1.6rem;
@@ -208,6 +209,7 @@ export const RadioTitleInput = styled.input`
 
   :focus {
     outline: 1px solid ${colors.blue[100]};
+    border: transparent;
   }
 
   ::-webkit-input-placeholder {

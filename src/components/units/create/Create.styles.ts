@@ -22,9 +22,11 @@ export const FormTitleInput = styled.input`
   height: 20px;
   padding: 16px 24px;
   font-weight: 600;
-  font-size: 40px;
+  font-size: 4rem;
   line-height: 48px;
   color: ${colors.black[100]};
+  border: transparent;
+  border-radius: 4px;
 
   :focus {
     outline: 1px solid ${colors.blue[100]};
@@ -35,11 +37,9 @@ export const FormTitleInput = styled.input`
   }
 `;
 
-export const FormDescription = styled.div<{ isEditDescription: boolean }>`
+export const FormDescription = styled.div`
   width: 59.583vw;
   background-color: ${colors.black[950]};
-  border: ${(props) =>
-    props.isEditDescription ? `1px solid ${colors.blue[100]}` : "none"};
   border-radius: 4px;
   font-weight: 400;
   font-size: 1.6rem;
@@ -57,12 +57,18 @@ export const FormDescription = styled.div<{ isEditDescription: boolean }>`
   `)}
 `;
 
-export const FormDescriptionInput = styled.input`
-  width: 100%;
-  height: 21px;
+export const FormDescriptionInput = styled.textarea`
+  resize: none;
+  width: 57vw;
+  background-color: ${colors.black[950]};
   color: ${colors.black[200]};
-  border: none;
-  background-color: transparent;
+  border: 1px solid ${colors.blue[100]};
+  border-radius: 4px;
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 21px;
+  padding: 16px 24px;
+  margin-bottom: 32px;
 
   :focus {
     outline: none;
