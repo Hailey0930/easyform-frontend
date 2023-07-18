@@ -185,7 +185,7 @@ export const FormTitleInput = styled.input`
 
 export const FormDescription = styled.div`
   width: 59.583vw;
-  height: 60px;
+  height: fit-content;
   background-color: ${colors.black[950]};
   border-radius: 4px;
   font-weight: 400;

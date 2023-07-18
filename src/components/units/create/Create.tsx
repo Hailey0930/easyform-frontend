@@ -36,6 +36,7 @@ export default function Create() {
   const router = useRouter();
 
   const { register, handleSubmit, getValues } = useForm<IFormInput>();
+  const { ref, ...rest } = register("formDescription");
 
   const CREATE_PAGE = router.asPath.includes("create");
   const RESULT_PAGE = router.asPath.includes("result");
@@ -73,17 +74,11 @@ export default function Create() {
   // NOTE textArea 높이 자동 설정
   const handleResizeHeight = useCallback(() => {
     if (textAreaRef.current !== null) {
-      textAreaRef.current.style.height = "21px";
+      textAreaRef.current.style.height = "fit-content";
       textAreaRef.current.style.height =
         textAreaRef.current?.scrollHeight - 20 + "px";
     }
   }, []);
-
-  // const handleResizeHeight: FormEventHandler<HTMLTextAreaElement> = (e) => {
-  //   const element = e.target as HTMLTextAreaElement;
-  //   element.style.height = "21px";
-  //   element.style.height = `${element.scrollHeight}px`;
-  // };
 
   const onClickEditTitle = () => {
     if (!isEditTitle) setIsEditTitle(true);
@@ -212,7 +207,10 @@ export default function Create() {
             {...register("formDescription", {
               onChange: handleResizeHeight,
             })}
-            // ref={textAreaRef}
+            ref={(e) => {
+              ref(e);
+              textAreaRef.current = e;
+            }}
             onBlur={onBlurEditDescription}
           />
         )}
