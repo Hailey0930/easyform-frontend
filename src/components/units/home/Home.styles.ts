@@ -19,13 +19,13 @@ export const Wrapper = styled.div`
 export const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
 
   width: 37.5vw;
   height: 31.25vw;
   background-color: ${colors.black[1000]};
   border-radius: 12px;
+  position: relative;
 
   ${setTabletStyle(css`
     width: 50.035vw;
@@ -38,6 +38,10 @@ export const ModalCloseContainer = styled.div`
   justify-content: flex-end;
   width: 100%;
   padding: 16px;
+
+  ${setTabletStyle(css`
+    padding: 10px;
+  `)}
 `;
 
 export const ModalCloseButton = styled.button`
@@ -57,7 +61,13 @@ export const ContentsContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
 
-  height: 130px;
+  height: 100px;
+  z-index: 2;
+
+  ${setTabletStyle(css`
+    margin-top: 30px;
+    height: 100px;
+  `)}
 `;
 
 export const ContentsTitle = styled.div`
@@ -72,6 +82,7 @@ export const ContentsTitle = styled.div`
   color: ${colors.black[300]};
 
   ${setTabletStyle(css`
+    height: 22px;
     font-size: 2rem;
   `)}
 `;
@@ -88,6 +99,7 @@ export const ContentsBoldTitle = styled.div`
   color: ${colors.black[100]};
 
   ${setTabletStyle(css`
+    height: 22px;
     font-size: 2rem;
   `)}
 `;
@@ -99,23 +111,20 @@ export const FireIcon = styled.div`
   background-image: url("/assets/icon_fire.png");
 `;
 
-export const MoveToCreateButton = styled.button`
-  width: 260px;
-  height: 60px;
-  background-color: ${colors.blue[100]};
-  border-radius: 7px;
-  border: transparent;
-  font-weight: 500;
-  font-size: ${fontSize.deskTopFont.MainTitle};
-  line-height: 24px;
-  color: ${colors.black[1000]};
-  margin-bottom: 50px;
-  cursor: pointer;
+export const HomeImageWrapper = styled.div`
+  width: 70%;
+  height: 60%;
+  position: absolute;
+  bottom: 0;
 
   ${setTabletStyle(css`
-    width: 230px;
-    height: 50px;
-    margin-bottom: 40px;
-    font-size: 2rem;
+    width: 60%;
+    height: 50%;
+    z-index: 1;
   `)}
+`;
+
+export const HomeImage = styled.img`
+  width: 100%;
+  height: 100%;
 `;
