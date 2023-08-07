@@ -36,9 +36,9 @@ export default function Home() {
             함께 작성하고 관리하세요. <S.FireIcon />
           </S.ContentsTitle>
         </S.ContentsContainer>
-        <S.MoveToCreateButton onClick={onClickMoveToCreate}>
-          설문지 작성하러 가기
-        </S.MoveToCreateButton>
+        <S.HomeImageWrapper>
+          <S.HomeImage src="/assets/img_home_modal.png" />
+        </S.HomeImageWrapper>
       </S.ModalContainer>
     </S.Wrapper>
   );
