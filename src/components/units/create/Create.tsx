@@ -19,8 +19,6 @@ import Toggle from "components/commons/Toggle";
 export default function Create() {
   const isLogin = useRecoilValue(loginState);
   const [isOn, setIsOn] = useState(true);
-  const [isEditTitle, setIsEditTitle] = useState(true);
-  const [isEditDescription, setIsEditDescription] = useState(false);
   const [addQuestion, setAddQuestion] = useState([
     {
       id: uuidv4(),
@@ -76,25 +74,9 @@ export default function Create() {
     if (textAreaRef.current !== null) {
       textAreaRef.current.style.height = "fit-content";
       textAreaRef.current.style.height =
-        textAreaRef.current?.scrollHeight - 20 + "px";
+        textAreaRef.current?.scrollHeight + "px";
     }
   }, []);
-
-  const onClickEditTitle = () => {
-    if (!isEditTitle) setIsEditTitle(true);
-  };
-
-  const onBlurEditTitle = () => {
-    setIsEditTitle(false);
-  };
-
-  const onClickEditDescription = () => {
-    if (!isEditDescription) setIsEditDescription(true);
-  };
-
-  const onBlurEditDescription = () => {
-    setIsEditDescription(false);
-  };
 
   const onClickAddQuestion = () => {
     const newAddQuestion = {
@@ -184,36 +166,23 @@ export default function Create() {
         </S.RightContainer>
       </S.MenubarWrapper>
       <S.Wrapper>
-        {!isEditTitle ? (
-          <S.FormTitle onClick={onClickEditTitle}>
-            {getValues().formTitle}
-          </S.FormTitle>
-        ) : (
-          <S.FormTitleInput
-            defaultValue="설문지1"
-            autoFocus
-            {...register("formTitle")}
-            onBlur={onBlurEditTitle}
-          />
-        )}
-        {!isEditDescription ? (
-          <S.FormDescription onClick={onClickEditDescription}>
-            {getValues().formDescription}
-          </S.FormDescription>
-        ) : (
-          <S.FormDescriptionInput
-            defaultValue="Form Description"
-            autoFocus
-            {...register("formDescription", {
-              onChange: handleResizeHeight,
-            })}
-            ref={(e) => {
-              ref(e);
-              textAreaRef.current = e;
-            }}
-            onBlur={onBlurEditDescription}
-          />
-        )}
+        <S.FormTitleInput
+          defaultValue="설문지1"
+          autoFocus
+          {...register("formTitle")}
+        />
+
+        <S.FormDescriptionInput
+          defaultValue="Form Description"
+          autoFocus
+          {...register("formDescription", {
+            onChange: handleResizeHeight,
+          })}
+          ref={(e) => {
+            ref(e);
+            textAreaRef.current = e;
+          }}
+        />
 
         <S.QuestionWrapper>
           {addQuestion.map((el: { id: string }) => (
