@@ -153,20 +153,11 @@ export const Wrapper = styled.div`
   padding: 0 1.667vw;
 `;
 
-export const FormTitle = styled.div`
-  margin-top: 48px;
-  margin-bottom: 32px;
-  font-weight: 600;
-  font-size: 4rem;
-  line-height: 48px;
-  color: ${colors.black[100]};
-`;
-
 export const FormTitleInput = styled.input`
   margin-top: 48px;
   margin-bottom: 32px;
-  height: 20px;
-  padding: 16px 24px;
+  width: fit-content;
+  height: max-content;
   font-weight: 600;
   font-size: 4rem;
   line-height: 48px;
@@ -174,8 +165,14 @@ export const FormTitleInput = styled.input`
   border: transparent;
   border-radius: 4px;
 
+  :hover {
+    border: 1px solid ${colors.blue[100]};
+  }
+
   :focus {
     outline: 1px solid ${colors.blue[100]};
+    border: none;
+    padding: 10px 20px;
   }
 
   ::-webkit-input-placeholder {
@@ -183,15 +180,16 @@ export const FormTitleInput = styled.input`
   }
 `;
 
-export const FormDescription = styled.div`
+export const FormDescriptionInput = styled.textarea`
+  resize: none;
   width: 59.583vw;
-  height: fit-content;
   background-color: ${colors.black[950]};
+  color: ${colors.black[200]};
+  border: 1px solid ${colors.black[700]};
   border-radius: 4px;
   font-weight: 400;
   font-size: 1.6rem;
   line-height: 21px;
-  color: ${colors.black[500]};
   padding: 16px 24px;
   margin-bottom: 32px;
 
@@ -199,26 +197,9 @@ export const FormDescription = styled.div`
     border: 1px solid ${colors.blue[100]};
   }
 
-  ${setTabletStyle(css`
-    width: 100%;
-  `)}
-`;
-
-export const FormDescriptionInput = styled.textarea`
-  resize: none;
-  width: 57vw;
-  background-color: ${colors.black[950]};
-  color: ${colors.black[200]};
-  border: 1px solid ${colors.blue[100]};
-  border-radius: 4px;
-  font-weight: 400;
-  font-size: 1.6rem;
-  line-height: 21px;
-  padding: 16px 24px;
-  margin-bottom: 32px;
-
   :focus {
-    outline: none;
+    outline: 1px solid ${colors.blue[100]};
+    border: none;
   }
 
   ::-webkit-input-placeholder {
@@ -226,7 +207,7 @@ export const FormDescriptionInput = styled.textarea`
   }
 
   ${setTabletStyle(css`
-    width: 96%;
+    width: 100%;
   `)}
 `;
 
