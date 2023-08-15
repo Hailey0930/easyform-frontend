@@ -64,6 +64,9 @@ time, mark, audio, video {
   input,
   textArea {
     font-family: inherit;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
   }
 
   ::-webkit-scrollbar {
