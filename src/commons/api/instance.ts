@@ -5,6 +5,29 @@ export const instance = axios.create({
   withCredentials: true,
 });
 
+instance.interceptors.request.use(
+  async (config) => {
+    if (typeof window !== undefined) {
+      if (localStorage.getItem("recoil-persist")) {
+        const loginState = JSON.parse(
+          localStorage.getItem("recoil-persist") as string
+        );
+        const token = loginState.loginState.accessToken;
+
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+      }
+    }
+
+    return config;
+  },
+
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 instance.interceptors.response.use(
   (res) => {
     if (res.status === 200) return res.data.data;

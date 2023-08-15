@@ -1,8 +1,7 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import * as S from "./Profile.styles";
-import { useCookie } from "commons/utils/cookie";
 import { useRouter } from "next/router";
-import { useRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import { loginState } from "store/loginState";
 import modalClose from "commons/utils/modalClose";
 import { getUserInfo } from "commons/api/getUserInfo";
@@ -12,7 +11,8 @@ export default function Profile() {
   const [nickName, setNickName] = useState("");
   const [language, setLanguage] = useState("korean");
   const [isModalDisplay, setIsModalDisplay] = useState(false);
-  const [, setIsLogin] = useRecoilState(loginState);
+  const login = useRecoilValue(loginState);
+  const resetLogin = useResetRecoilState(loginState);
 
   const outSide = useRef<HTMLDivElement>(null);
 
@@ -21,7 +21,7 @@ export default function Profile() {
   const { data: userInfo } = getUserInfo();
 
   useEffect(() => {
-    if (!useCookie.getCookie("access-token")) {
+    if (!login) {
       router.replace("/");
     }
   }, []);
@@ -56,8 +56,7 @@ export default function Profile() {
   };
 
   const onClickLogOut = () => {
-    useCookie.removeCookie("access-token");
-    setIsLogin(false);
+    resetLogin();
     router.replace("/");
   };
 
