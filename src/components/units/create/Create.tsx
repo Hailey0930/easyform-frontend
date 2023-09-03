@@ -1,24 +1,19 @@
-import {
-  FormEventHandler,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import * as S from "./Create.styles";
 import Question from "components/commons/question/Question";
 import { v4 as uuidv4 } from "uuid";
 import ToastPopUp from "components/commons/ToastPopUP";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { IFormInput } from "commons/types/create.types";
 import { useRouter } from "next/router";
 import { useRecoilValue } from "recoil";
 import { loginState } from "store/loginState";
 import Toggle from "components/commons/Toggle";
+import { IQuestionValue } from "commons/types/Create.types";
 
 export default function Create() {
   const isLogin = useRecoilValue(loginState);
-  const [isOn, setIsOn] = useState(true);
+  const [isReceiveResponse, setIsReceiveResponse] = useState(true);
+  const [title, setTitle] = useState("설문지");
+  const [description, setDescription] = useState("Form Description");
   const [addQuestion, setAddQuestion] = useState([
     {
       id: uuidv4(),
@@ -27,14 +22,13 @@ export default function Create() {
   const [isToastOpen, setIsToastOpen] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [scrollTopDown, setScrollTopDown] = useState("top");
+  // NOTE 전체 Question값 저장
+  const [questionValue, setQuestionValue] = useState<IQuestionValue[]>([]);
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const router = useRouter();
-
-  const { register, handleSubmit, getValues } = useForm<IFormInput>();
-  const { ref, ...rest } = register("formDescription");
 
   const CREATE_PAGE = router.asPath.includes("create");
   const RESULT_PAGE = router.asPath.includes("result");
@@ -65,18 +59,25 @@ export default function Create() {
     router.push("/result/summary");
   };
 
-  const onClickToggle = () => {
-    setIsOn(!isOn);
+  // NOTE 응답받기 토글
+  const onClickReceiveResponseToggle = () => {
+    setIsReceiveResponse(!isReceiveResponse);
+  };
+
+  const handleTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
   };
 
   // NOTE textArea 높이 자동 설정
-  const handleResizeHeight = useCallback(() => {
-    if (textAreaRef.current !== null) {
-      textAreaRef.current.style.height = "fit-content";
-      textAreaRef.current.style.height =
-        textAreaRef.current?.scrollHeight + "px";
-    }
-  }, []);
+  const adjustTextAreaHeight = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    e.target.style.height = "auto"; // 높이를 재설정하기 전에 auto로 설정
+    e.target.style.height = `${e.target.scrollHeight}px`; // 새 높이로 설정
+  };
+
+  const handleDescription = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value);
+    adjustTextAreaHeight(e);
+  };
 
   const onClickAddQuestion = () => {
     const newAddQuestion = {
@@ -95,6 +96,26 @@ export default function Create() {
     }
   };
 
+  // NOTE Question 컴포넌트에서 question value 가져오기
+  const handleQuestionValue = (id: string, newState: any) => {
+    const existingIndex = questionValue.findIndex((state) => state.id === id);
+
+    if (existingIndex > -1) {
+      const updatedQuestionValue = [...questionValue];
+      updatedQuestionValue[existingIndex] = { id, ...newState };
+      setQuestionValue(updatedQuestionValue);
+    } else {
+      setQuestionValue([...questionValue, { id, ...newState }]);
+    }
+  };
+
+  const onClickSaveButton = () => {
+    console.log("questionValue", questionValue);
+    console.log("title", title);
+    console.log("description", description);
+  };
+
+  // NOTE 맨 위로 가기
   const onClickScrollToTop = () => {
     if (window !== undefined) {
       window.scrollTo({
@@ -105,6 +126,7 @@ export default function Create() {
     setScrollTopDown("down");
   };
 
+  // NOTE 맨 아래로 가기
   const onClickScrollToBottom = () => {
     if (window !== undefined) {
       window.scrollTo({
@@ -115,18 +137,15 @@ export default function Create() {
     setScrollTopDown("top");
   };
 
+  // NOTE 스크롤 포지션 가져오기
   const getScrollPosition = () => {
     if (window !== undefined) {
       setScrollPosition(window.scrollY || document.documentElement.scrollTop);
     }
   };
 
-  const onSubmitForm: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
-  };
-
   return (
-    <form onSubmit={handleSubmit(onSubmitForm)}>
+    <>
       <S.MenubarWrapper>
         <S.LeftContainer>
           <S.CategoryTitle
@@ -140,7 +159,6 @@ export default function Create() {
             className={`${RESULT_PAGE ? "active" : ""}`}
             value="result"
             onClick={onClickResult}
-            type="button"
           >
             응답
           </S.CategoryTitle>
@@ -148,16 +166,17 @@ export default function Create() {
         <S.RightContainer>
           <S.ResponseContainer>
             응답받기
-            <Toggle onClick={onClickToggle} isOn={isOn} />
+            <Toggle
+              onClick={onClickReceiveResponseToggle}
+              isOn={isReceiveResponse}
+            />
           </S.ResponseContainer>
           <S.MiddleButtonContainer>
-            <S.TextButton type="button">미리보기</S.TextButton>
-            <S.TextButton type="button">초기화</S.TextButton>
-            <S.ShareButton type="button" isLogin={isLogin}>
-              공유
-            </S.ShareButton>
+            <S.TextButton>미리보기</S.TextButton>
+            <S.TextButton>초기화</S.TextButton>
+            <S.ShareButton isLogin={isLogin}>공유</S.ShareButton>
           </S.MiddleButtonContainer>
-          <S.SaveButton type="submit" isLogin={isLogin}>
+          <S.SaveButton isLogin={isLogin} onClick={onClickSaveButton}>
             저장
             <S.SaveBubble isLogin={isLogin}>
               로그인 이후 서비스를 완전히 이용할 수 있어요!
@@ -167,21 +186,14 @@ export default function Create() {
       </S.MenubarWrapper>
       <S.Wrapper>
         <S.FormTitleInput
-          defaultValue="설문지1"
+          defaultValue={title}
           autoFocus
-          {...register("formTitle")}
+          onChange={handleTitle}
         />
 
         <S.FormDescriptionInput
-          defaultValue="Form Description"
-          autoFocus
-          {...register("formDescription", {
-            onChange: handleResizeHeight,
-          })}
-          ref={(e) => {
-            ref(e);
-            textAreaRef.current = e;
-          }}
+          defaultValue={description}
+          onChange={handleDescription}
         />
 
         <S.QuestionWrapper>
@@ -190,6 +202,9 @@ export default function Create() {
               questionId={el.id}
               key={el.id}
               onClickDeleteQuestion={onClickDeleteQuestion}
+              onSaveQuestionValue={(newQuestionValue: any) =>
+                handleQuestionValue(el.id, newQuestionValue)
+              }
             />
           ))}
         </S.QuestionWrapper>
@@ -201,7 +216,6 @@ export default function Create() {
         {addQuestion.length > 2 && (
           <S.ScrollButtonWrapper>
             <S.ScrollButton
-              type="button"
               onClick={
                 scrollTopDown === "top"
                   ? onClickScrollToTop
@@ -218,6 +232,6 @@ export default function Create() {
           toastMode="warning"
         />
       </S.Wrapper>
-    </form>
+    </>
   );
 }
