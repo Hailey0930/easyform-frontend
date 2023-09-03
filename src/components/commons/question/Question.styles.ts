@@ -137,6 +137,8 @@ export const DropdownSelectWrapper = styled.div<{ isDropdownOpen: boolean }>`
   width: 171px;
   height: 80px;
   top: 40px;
+  background-color: ${colors.black[950]};
+  z-index: 2;
 `;
 
 export const DropdownSelect = styled.button`
