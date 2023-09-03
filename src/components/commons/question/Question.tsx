@@ -12,7 +12,7 @@ export default function Question({
   onSaveQuestionValue,
 }: IQuestionProps) {
   // NOTE 설문지 제목
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("Untitled Question");
   const [isEditMode, setIsEditMode] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [questionType, setQuestionType] = useState("Multiple Choice");
@@ -21,7 +21,7 @@ export default function Question({
   // NOTE 필수
   const [isNecessaryOn, setIsNecessaryOn] = useState(false);
   // NOTE 설문지 옵션
-  const [option, setOption] = useState([{ id: uuidv4(), value: "Option" }]);
+  const [options, setOptions] = useState([{ id: uuidv4(), value: "Option" }]);
   // NOTE 주관식 설문지 내용
   const [paragraphDescription, setParagraphDescription] =
     useState("Form Description");
@@ -31,14 +31,12 @@ export default function Question({
 
   // NOTE 아무런 액션을 하지 않았을 때 첫 Question value 값 넣어서 자동저장
   useEffect(() => {
-    console.log("Saved state:", savedState);
-
     onSaveQuestionValue({
       title,
       questionType,
       isMultipleChoiceOn,
       isNecessaryOn,
-      option,
+      options,
     });
   }, [savedState]);
 
@@ -55,7 +53,7 @@ export default function Question({
   };
 
   const onClickSaveButton = () => {
-    if (isMultipleChoiceOn && option.length === 1) {
+    if (isMultipleChoiceOn && options.length === 1) {
       setIsToastOpen(true);
     } else {
       setIsEditMode(false);
@@ -65,7 +63,7 @@ export default function Question({
         questionType,
         isMultipleChoiceOn,
         isNecessaryOn,
-        option,
+        options,
       };
 
       const newParagraphValue = {
@@ -92,19 +90,19 @@ export default function Question({
 
     if (questionType === "Multiple Choice") {
       if (
-        !title &&
+        title === "Untitled Question" &&
         !isMultipleChoiceOn &&
         !isNecessaryOn &&
-        option[0].value !== "Option"
+        options[0].value !== "Option"
       ) {
         setQuestionType(initialQuestion.questionType);
         setIsMultipleChoiceOn(initialQuestion.isMultipleChoiceOn);
         setIsNecessaryOn(initialQuestion.isNecessaryOn);
-        setOption(initialQuestion.option);
+        setOptions(initialQuestion.option);
       }
     } else if (questionType === "Paragraph") {
       if (
-        !title &&
+        title === "Untitled Question" &&
         !isMultipleChoiceOn &&
         !isNecessaryOn &&
         paragraphDescription !== "Paragraph"
@@ -112,7 +110,7 @@ export default function Question({
         setQuestionType(initialQuestion.questionType);
         setIsMultipleChoiceOn(initialQuestion.isMultipleChoiceOn);
         setIsNecessaryOn(initialQuestion.isNecessaryOn);
-        setOption(initialQuestion.option);
+        setOptions(initialQuestion.option);
       }
     }
   };
@@ -122,7 +120,7 @@ export default function Question({
   };
 
   const handleOptionChange = (id: string, newValue: string) => {
-    setOption((prevOptions) =>
+    setOptions((prevOptions) =>
       prevOptions.map((option) =>
         option.id === id ? { ...option, value: newValue } : option
       )
@@ -149,12 +147,12 @@ export default function Question({
       id: uuidv4(),
       value: "Option",
     };
-    setOption([...option, newAddOption]);
+    setOptions([...options, newAddOption]);
   };
 
   const onClickDeleteOption = (id: string) => {
-    if (option.length > 1)
-      setOption(option.filter((option: { id: string }) => option.id !== id));
+    if (options.length > 1)
+      setOptions(options.filter((option: { id: string }) => option.id !== id));
   };
 
   const onClickMultipleChoiceToggle = () => {
@@ -171,13 +169,15 @@ export default function Question({
         <S.QuestionTitleWrapper>
           {isEditMode ? (
             <S.QuestionTitleInput
-              defaultValue={title ? title : "Untitled Question"}
+              defaultValue={
+                title === "Untitled Question" ? "Untitled Question" : title
+              }
               autoFocus
               onChange={handleTitle}
             />
           ) : (
             <S.QuestionTitle>
-              {title ? title : "Untitled Question"}
+              {title === "Untitled Question" ? "Untitled Question" : title}
             </S.QuestionTitle>
           )}
           {isEditMode && (
@@ -209,7 +209,7 @@ export default function Question({
 
       {questionType === "Multiple Choice" ? (
         <S.QuestionMiddleWrapper>
-          {option.map((el) => (
+          {options.map((el) => (
             <S.SelectWrapper key={el.id}>
               <S.RadioOptionWrapper>
                 <S.Radio
@@ -227,7 +227,7 @@ export default function Question({
                     <S.AddImageWrapper>
                       <S.AddImage src="/assets/create/icon_image.png" />
                     </S.AddImageWrapper>
-                    {option.length >= 2 && (
+                    {options.length >= 2 && (
                       <S.DeleteOptionWrapper
                         onClick={() => onClickDeleteOption(el.id)}
                       >
