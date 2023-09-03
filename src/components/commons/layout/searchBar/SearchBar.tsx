@@ -1,12 +1,13 @@
+import { getSurveyPost } from "commons/api/create/getSurveyPost";
 import * as S from "components/commons/layout/searchBar/SearchBar.styles";
-import { useRouter } from "next/router";
 
 export default function SearchBar() {
-  const router = useRouter();
+  const { mutate: createMutate } = getSurveyPost();
 
   const onClickCreateNew = () => {
-    router.push("/create");
+    createMutate();
   };
+
   return (
     <S.Wrapper>
       <S.SearchWrapper>
