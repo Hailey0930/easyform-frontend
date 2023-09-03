@@ -68,18 +68,16 @@ export default function Create() {
     setTitle(e.target.value);
   };
 
-  const handleDescription = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(e.target.value);
+  // NOTE textArea 높이 자동 설정
+  const adjustTextAreaHeight = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    e.target.style.height = "auto"; // 높이를 재설정하기 전에 auto로 설정
+    e.target.style.height = `${e.target.scrollHeight}px`; // 새 높이로 설정
   };
 
-  // NOTE textArea 높이 자동 설정
-  const handleResizeHeight = useCallback(() => {
-    if (textAreaRef.current !== null) {
-      textAreaRef.current.style.height = "fit-content";
-      textAreaRef.current.style.height =
-        textAreaRef.current?.scrollHeight + "px";
-    }
-  }, []);
+  const handleDescription = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value);
+    adjustTextAreaHeight(e);
+  };
 
   const onClickAddQuestion = () => {
     const newAddQuestion = {
