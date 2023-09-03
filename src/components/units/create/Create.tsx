@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { useRecoilValue } from "recoil";
 import { loginState } from "store/loginState";
 import Toggle from "components/commons/Toggle";
-import { IQuestionValue } from "commons/types/create.types";
+import { IQuestionValue } from "commons/types/Create.types";
 
 export default function Create() {
   const isLogin = useRecoilValue(loginState);
