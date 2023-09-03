@@ -1,27 +1,53 @@
-import { MouseEvent, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 import Toggle from "../Toggle";
 import * as S from "./Question.styles";
 import { IQuestionProps } from "./Question.types";
 import { v4 as uuidv4 } from "uuid";
 import ToastPopUp from "../ToastPopUP";
+import { ISavedState } from "commons/types/Question.types";
 
 export default function Question({
   questionId,
   onClickDeleteQuestion,
+  onSaveQuestionValue,
 }: IQuestionProps) {
+  // NOTE 설문지 제목
+  const [title, setTitle] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [questionType, setQuestionType] = useState("Multiple Choice");
+  // NOTE 복수 선택
   const [isMultipleChoiceOn, setIsMultipleChoiceOn] = useState(false);
+  // NOTE 필수
   const [isNecessaryOn, setIsNecessaryOn] = useState(false);
-  const [option, setOption] = useState([{ id: uuidv4() }]);
+  // NOTE 설문지 옵션
+  const [option, setOption] = useState([{ id: uuidv4(), value: "Option" }]);
+  // NOTE 주관식 설문지 내용
+  const [paragraphDescription, setParagraphDescription] =
+    useState("Form Description");
   const [isToastOpen, setIsToastOpen] = useState(false);
+  // NOTE 저장 시 저장되는 설문지 내용들
+  const [savedState, setSavedState] = useState<ISavedState>();
+
+  // NOTE 아무런 액션을 하지 않았을 때 첫 Question value 값 넣어서 자동저장
+  useEffect(() => {
+    console.log("Saved state:", savedState);
+
+    onSaveQuestionValue({
+      title,
+      questionType,
+      isMultipleChoiceOn,
+      isNecessaryOn,
+      option,
+    });
+  }, [savedState]);
 
   const initialQuestion = {
     questionType: "Multiple Choice",
     isMultipleChoiceOn: false,
     isNecessaryOn: false,
-    option: [{ id: uuidv4() }],
+    option: [{ id: uuidv4(), value: "Option" }],
+    paragraphDescription: "",
   };
 
   const onClickEditButton = () => {
@@ -33,15 +59,80 @@ export default function Question({
       setIsToastOpen(true);
     } else {
       setIsEditMode(false);
+
+      const newMultipleValue = {
+        title,
+        questionType,
+        isMultipleChoiceOn,
+        isNecessaryOn,
+        option,
+      };
+
+      const newParagraphValue = {
+        title,
+        questionType,
+        isMultipleChoiceOn,
+        isNecessaryOn,
+        paragraphDescription,
+      };
+
+      if (questionType === "Multiple Choice") {
+        setSavedState(newMultipleValue);
+        onSaveQuestionValue(newMultipleValue);
+      } else if (questionType === "Paragraph") {
+        setSavedState(newParagraphValue);
+        onSaveQuestionValue(newParagraphValue);
+      }
     }
   };
 
+  // NOTE 취소 눌렀을 때, 저장이 한 번도 되지 않았던 경우에만 초기화시키기
   const onClickCancelButton = () => {
     setIsEditMode(false);
-    setQuestionType(initialQuestion.questionType);
-    setIsMultipleChoiceOn(initialQuestion.isMultipleChoiceOn);
-    setIsNecessaryOn(initialQuestion.isNecessaryOn);
-    setOption(initialQuestion.option);
+
+    if (questionType === "Multiple Choice") {
+      if (
+        !title &&
+        !isMultipleChoiceOn &&
+        !isNecessaryOn &&
+        option[0].value !== "Option"
+      ) {
+        setQuestionType(initialQuestion.questionType);
+        setIsMultipleChoiceOn(initialQuestion.isMultipleChoiceOn);
+        setIsNecessaryOn(initialQuestion.isNecessaryOn);
+        setOption(initialQuestion.option);
+      }
+    } else if (questionType === "Paragraph") {
+      if (
+        !title &&
+        !isMultipleChoiceOn &&
+        !isNecessaryOn &&
+        paragraphDescription !== "Paragraph"
+      ) {
+        setQuestionType(initialQuestion.questionType);
+        setIsMultipleChoiceOn(initialQuestion.isMultipleChoiceOn);
+        setIsNecessaryOn(initialQuestion.isNecessaryOn);
+        setOption(initialQuestion.option);
+      }
+    }
+  };
+
+  const handleTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
+  const handleOptionChange = (id: string, newValue: string) => {
+    setOption((prevOptions) =>
+      prevOptions.map((option) =>
+        option.id === id ? { ...option, value: newValue } : option
+      )
+    );
+  };
+
+  const handleParagraphDescriptionChange = (
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
+    setParagraphDescription(e.target.value);
   };
 
   const onClickDropdown = () => {
@@ -56,6 +147,7 @@ export default function Question({
   const onClickAddOption = () => {
     const newAddOption = {
       id: uuidv4(),
+      value: "Option",
     };
     setOption([...option, newAddOption]);
   };
@@ -78,9 +170,15 @@ export default function Question({
       <S.QuestionTopWrapper>
         <S.QuestionTitleWrapper>
           {isEditMode ? (
-            <S.QuestionTitleInput defaultValue="Untitled Question" autoFocus />
+            <S.QuestionTitleInput
+              defaultValue={title ? title : "Untitled Question"}
+              autoFocus
+              onChange={handleTitle}
+            />
           ) : (
-            <S.QuestionTitle>Untitled Question</S.QuestionTitle>
+            <S.QuestionTitle>
+              {title ? title : "Untitled Question"}
+            </S.QuestionTitle>
           )}
           {isEditMode && (
             <S.AddImageWrapper>
@@ -111,7 +209,7 @@ export default function Question({
 
       {questionType === "Multiple Choice" ? (
         <S.QuestionMiddleWrapper>
-          {option.map((el: { id: string }) => (
+          {option.map((el) => (
             <S.SelectWrapper key={el.id}>
               <S.RadioOptionWrapper>
                 <S.Radio
@@ -120,7 +218,12 @@ export default function Question({
                 />
                 {isEditMode ? (
                   <>
-                    <S.RadioTitleInput defaultValue="Option" />
+                    <S.RadioTitleInput
+                      defaultValue={el.value}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        handleOptionChange(el.id, e.target.value)
+                      }
+                    />
                     <S.AddImageWrapper>
                       <S.AddImage src="/assets/create/icon_image.png" />
                     </S.AddImageWrapper>
@@ -133,7 +236,7 @@ export default function Question({
                     )}
                   </>
                 ) : (
-                  <S.RadioTitle>Option</S.RadioTitle>
+                  <S.RadioTitle>{el.value}</S.RadioTitle>
                 )}
               </S.RadioOptionWrapper>
             </S.SelectWrapper>
@@ -147,9 +250,12 @@ export default function Question({
       ) : (
         <S.ParagraphWrapper isEditMode={isEditMode}>
           {!isEditMode ? (
-            "Form Description"
+            paragraphDescription
           ) : (
-            <S.ParagraphInput defaultValue="Form Description" />
+            <S.ParagraphInput
+              defaultValue={paragraphDescription}
+              onChange={handleParagraphDescriptionChange}
+            />
           )}
         </S.ParagraphWrapper>
       )}
