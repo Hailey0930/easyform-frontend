@@ -11,15 +11,18 @@ export default function Login() {
   const router = useRouter();
 
   const KakaoLogin = () => {
-    router.replace(`${process.env.NEXT_PUBLIC_LOCAL_API}/auth/kakao`);
+    if (window !== undefined)
+      window.location.href = `${process.env.NEXT_PUBLIC_LOCAL_API}/auth/kakao`;
   };
 
   const NaverLogin = () => {
-    router.replace(`${process.env.NEXT_PUBLIC_LOCAL_API}/auth/naver`);
+    if (window !== undefined)
+      window.location.href = `${process.env.NEXT_PUBLIC_LOCAL_API}/auth/naver`;
   };
 
   const GoogleLogin = () => {
-    router.replace(`${process.env.NEXT_PUBLIC_LOCAL_API}/auth/google`);
+    if (window !== undefined)
+      window.location.href = `${process.env.NEXT_PUBLIC_LOCAL_API}/auth/google`;
   };
 
   return (

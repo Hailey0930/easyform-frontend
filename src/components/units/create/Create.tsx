@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import * as S from "./Create.styles";
 import Question from "components/commons/question/Question";
 import { v4 as uuidv4 } from "uuid";
@@ -7,7 +7,8 @@ import { useRouter } from "next/router";
 import { useRecoilValue } from "recoil";
 import { loginState } from "store/loginState";
 import Toggle from "components/commons/Toggle";
-import { IQuestionValue } from "commons/types/create.types";
+import { IQuestionValue } from "commons/types/Create.types";
+import { getSurveyPut } from "commons/api/create/getSurveyPut";
 
 export default function Create() {
   const isLogin = useRecoilValue(loginState);
@@ -24,14 +25,26 @@ export default function Create() {
   const [scrollTopDown, setScrollTopDown] = useState("top");
   // NOTE 전체 Question값 저장
   const [questionValue, setQuestionValue] = useState<IQuestionValue[]>([]);
+  // NOTE 저장 성공 시 ToastPopup 노출
+  const [isSuccessSave, setIsSuccessSave] = useState(false);
+  // NOTE 저장 실패 시 ToastPopup 노출
+  const [isFailSave, setIsFailSave] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const router = useRouter();
 
   const CREATE_PAGE = router.asPath.includes("create");
   const RESULT_PAGE = router.asPath.includes("result");
+
+  const { mutate: surveyPut } = getSurveyPut(
+    title,
+    description,
+    isReceiveResponse,
+    questionValue,
+    setIsSuccessSave,
+    setIsFailSave
+  );
 
   // NOTE add question 버튼 클릭 시 스크롤 아래로 이동하도록 하는 useEffect
   useEffect(() => {
@@ -110,9 +123,7 @@ export default function Create() {
   };
 
   const onClickSaveButton = () => {
-    console.log("questionValue", questionValue);
-    console.log("title", title);
-    console.log("description", description);
+    surveyPut();
   };
 
   // NOTE 맨 위로 가기
@@ -232,6 +243,24 @@ export default function Create() {
           toastMode="warning"
         />
       </S.Wrapper>
+
+      {isSuccessSave && (
+        <ToastPopUp
+          isToastOpen={isSuccessSave}
+          setIsToastOpen={setIsSuccessSave}
+          contents="설문지가 저장되었습니다."
+          toastMode="normal"
+        />
+      )}
+
+      {isFailSave && (
+        <ToastPopUp
+          isToastOpen={isFailSave}
+          setIsToastOpen={setIsFailSave}
+          contents="저장에 실패하였습니다. 다시 시도해주세요"
+          toastMode="warning"
+        />
+      )}
     </>
   );
 }

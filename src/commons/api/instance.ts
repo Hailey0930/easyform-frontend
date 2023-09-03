@@ -2,12 +2,11 @@ import axios from "axios";
 
 export const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_LOCAL_API,
-  withCredentials: true,
 });
 
 instance.interceptors.request.use(
   async (config) => {
-    if (typeof window !== undefined) {
+    if (window !== undefined) {
       if (localStorage.getItem("recoil-persist")) {
         const loginState = JSON.parse(
           localStorage.getItem("recoil-persist") as string
@@ -30,7 +29,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (res) => {
-    if (res.status === 200) return res.data.data;
+    return res.data.data;
   },
 
   (err) => {
