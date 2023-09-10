@@ -4,11 +4,14 @@ import FormModal from "./FormModal";
 import modalClose from "commons/utils/modalClose";
 import { IFormContainerProps } from "commons/types/getSurveyList.types";
 import dayjs from "dayjs";
+import { useRouter } from "next/router";
 
 export default function FormContainer({ survey }: IFormContainerProps) {
   const [isDisplayFormModal, setIsDisplayFormModal] = useState(false);
 
   const outSide = useRef<HTMLDivElement>(null);
+
+  const router = useRouter();
 
   useEffect(() => {
     modalClose(isDisplayFormModal, setIsDisplayFormModal, outSide);
@@ -22,8 +25,12 @@ export default function FormContainer({ survey }: IFormContainerProps) {
   const editDate = dayjs(survey.updatedAt);
   const differenceInDays = today.diff(editDate, "day");
 
+  const onClickMoveToDetailSurvey = (id: string) => {
+    router.push(`/create/${id}`);
+  };
+
   return (
-    <S.FormContainer>
+    <S.FormContainer onClick={() => onClickMoveToDetailSurvey(survey.id)}>
       <S.FormImageWrapper>
         <S.FormImage />
       </S.FormImageWrapper>
