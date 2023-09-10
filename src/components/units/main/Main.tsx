@@ -5,11 +5,11 @@ import { useState } from "react";
 
 export default function Main() {
   const [offset] = useState(0);
-  const [limit] = useState(10);
+  const [limit] = useState(30);
 
   const { data: surveyList } = getSurveyList(offset, limit);
 
-  return surveyList && surveyList.length < 1 ? (
+  return !surveyList ? (
     <S.Wrapper>
       <S.InformationContainer>
         <S.ImageContainer>
