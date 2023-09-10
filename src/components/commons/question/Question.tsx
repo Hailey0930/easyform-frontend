@@ -1,15 +1,18 @@
-import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import Toggle from "../Toggle";
 import * as S from "./Question.styles";
 import { IQuestionProps } from "./Question.types";
 import { v4 as uuidv4 } from "uuid";
 import ToastPopUp from "../ToastPopUP";
 import { ISavedState } from "commons/types/Question.types";
+import { useRecoilValue } from "recoil";
+import { loginState } from "store/loginState";
 
 export default function Question({
   questionId,
   onClickDeleteQuestion,
   onSaveQuestionValue,
+  saveQuestion,
 }: IQuestionProps) {
   // NOTE 설문지 제목
   const [title, setTitle] = useState("Untitled Question");
@@ -28,6 +31,10 @@ export default function Question({
   const [isToastOpen, setIsToastOpen] = useState(false);
   // NOTE 저장 시 저장되는 설문지 내용들
   const [savedState, setSavedState] = useState<ISavedState>();
+  const login = useRecoilValue(loginState);
+
+  // NOTE 자동저장을 위한 타이머
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // NOTE 아무런 액션을 하지 않았을 때 첫 Question value 값 넣어서 자동저장
   useEffect(() => {
@@ -39,6 +46,32 @@ export default function Question({
       options,
     });
   }, [savedState]);
+
+  // NOTE 키보드 이벤트, 마우스 이벤트가 발생할 때마다 타이머를 재설정
+  useEffect(() => {
+    window.addEventListener("keydown", resetAutoSaveTimer);
+    window.addEventListener("click", resetAutoSaveTimer);
+
+    return () => {
+      window.removeEventListener("keydown", resetAutoSaveTimer);
+      window.removeEventListener("click", resetAutoSaveTimer);
+    };
+  });
+
+  // NOTE 설문지 자동 저장
+  const autoSave = () => {
+    if (login.isLogin) saveQuestion();
+  };
+
+  // NOTE 이벤트 발생 시 타이머 초기화 및 재설정
+  const resetAutoSaveTimer = () => {
+    if (autoSaveTimer.current) {
+      clearTimeout(autoSaveTimer.current);
+    }
+    autoSaveTimer.current = setTimeout(() => {
+      autoSave();
+    }, 1000); // 1초 후 autoSave 함수 실행
+  };
 
   const initialQuestion = {
     questionType: "Multiple Choice",

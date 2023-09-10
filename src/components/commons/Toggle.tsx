@@ -3,7 +3,7 @@ import { colors } from "commons/styles/palette";
 
 interface IToggle {
   onClick: () => void;
-  isOn: boolean;
+  isOn: boolean | undefined;
 }
 
 export default function Toggle({ onClick, isOn }: IToggle) {

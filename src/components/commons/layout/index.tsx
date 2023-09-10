@@ -6,6 +6,7 @@ import MBWriteButton from "./MBWriteButton";
 import { setMobileStyle, setTabletStyle } from "commons/styles/mediaQuery";
 import { css } from "@emotion/react";
 import { useRouter } from "next/router";
+import MenuBar from "./menuBar/MenuBar";
 
 interface ILayoutProps {
   children: ReactNode;
@@ -30,7 +31,7 @@ export default function Layout(props: ILayoutProps) {
         <>
           <Header />
           <SearchBarBodyWrapper>
-            {createPage || resultPage ? <></> : <SearchBar />}
+            {createPage || resultPage ? <MenuBar /> : <SearchBar />}
             {props.children}
           </SearchBarBodyWrapper>
           <MBWriteButton />
