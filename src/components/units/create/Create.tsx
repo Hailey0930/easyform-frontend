@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import ToastPopUp from "components/commons/ToastPopUP";
 import { getSurveyPut } from "commons/api/create/getSurveyPut";
 import { useRouter } from "next/router";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { surveyIdState } from "store/surveyIdState";
 import { questionState } from "store/questionState";
 
@@ -23,7 +23,7 @@ export default function Create() {
   const [isSuccessSave, setIsSuccessSave] = useState(false);
   // NOTE 저장 실패 시 ToastPopup 노출
   const [isFailSave, setIsFailSave] = useState(false);
-  const [surveyId, setSurveyId] = useRecoilState(surveyIdState);
+  const setSurveyId = useSetRecoilState(surveyIdState);
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -47,10 +47,6 @@ export default function Create() {
       setSurveyId(router.query.surveyId);
     }
   }, [router]);
-
-  useEffect(() => {
-    console.log("Current surveyId in Result:", surveyId);
-  }, [surveyId]);
 
   // NOTE add question 버튼 클릭 시 스크롤 아래로 이동하도록 하는 useEffect
   useEffect(() => {
@@ -104,7 +100,7 @@ export default function Create() {
 
   // NOTE Question 컴포넌트에서 question value 가져오기
   const handleQuestionValue = (id: string, newState: any) => {
-    const existingIndex = question.questionValue.findIndex(
+    const existingIndex = question.questionValue?.findIndex(
       (state) => state.id === id
     );
 

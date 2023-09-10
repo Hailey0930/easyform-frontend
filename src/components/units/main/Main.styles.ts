@@ -1,8 +1,7 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { setMobileStyle, setTabletStyle } from "commons/styles/mediaQuery";
-import { colors } from "commons/styles/palette";
-import { fontSize } from "commons/styles/palette";
+import { colors, fontSize } from "commons/styles/palette";
 
 export const Wrapper = styled.div`
   padding: 0 1.25vw;
@@ -36,15 +35,18 @@ export const ListWrapper = styled.div`
   column-gap: 1.25vw;
   row-gap: 26px;
   margin-bottom: 26px;
+  min-height: 15.104vw;
 
   ${setTabletStyle(css`
     grid-template-columns: repeat(2, minmax(100px, 1fr));
     column-gap: 1.668vw;
+    min-height: 38.802vw;
   `)}
 
   ${setMobileStyle(css`
     grid-template-columns: repeat(1, minmax(100px, 1fr));
     row-gap: 0;
+    min-height: 23.889vw;
   `)}
 `;
 
