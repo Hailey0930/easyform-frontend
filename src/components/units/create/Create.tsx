@@ -11,7 +11,7 @@ import { IQuestionValue } from "commons/types/Create.types";
 import { getSurveyPut } from "commons/api/create/getSurveyPut";
 
 export default function Create() {
-  const isLogin = useRecoilValue(loginState);
+  const login = useRecoilValue(loginState);
   const [isReceiveResponse, setIsReceiveResponse] = useState(true);
   const [title, setTitle] = useState("설문지");
   const [description, setDescription] = useState("Form Description");
@@ -185,11 +185,14 @@ export default function Create() {
           <S.MiddleButtonContainer>
             <S.TextButton>미리보기</S.TextButton>
             <S.TextButton>초기화</S.TextButton>
-            <S.ShareButton isLogin={isLogin}>공유</S.ShareButton>
+            <S.ShareButton isLogin={login.isLogin}>공유</S.ShareButton>
           </S.MiddleButtonContainer>
-          <S.SaveButton isLogin={isLogin} onClick={onClickSaveButton}>
+          <S.SaveButton
+            isLogin={login.isLogin}
+            onClick={login.isLogin ? onClickSaveButton : undefined}
+          >
             저장
-            <S.SaveBubble isLogin={isLogin}>
+            <S.SaveBubble isLogin={login.isLogin}>
               로그인 이후 서비스를 완전히 이용할 수 있어요!
             </S.SaveBubble>
           </S.SaveButton>
@@ -216,6 +219,7 @@ export default function Create() {
               onSaveQuestionValue={(newQuestionValue: any) =>
                 handleQuestionValue(el.id, newQuestionValue)
               }
+              saveQuestion={surveyPut}
             />
           ))}
         </S.QuestionWrapper>
